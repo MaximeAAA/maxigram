@@ -49,6 +49,9 @@ THIRD_PARTY_APPS = [
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+    'rest_framework', #Rest framework
+    'taggit', #Tags for the photos
+    'taggit_serializer',
 ]
 
 # Apps specific for this project go here.
@@ -56,6 +59,8 @@ LOCAL_APPS = [
     # custom users app
     'maxigram.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'maxigram.images.apps.ImagesConfig',
+    'maxigram.noti.apps.NotiConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -273,3 +278,15 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+TAGGIT_CASE_INSENSITIVE = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
