@@ -173,5 +173,6 @@ class ChangePassword(APIView):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter

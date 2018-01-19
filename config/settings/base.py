@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (maxigram/config/settings/base.py - 3 = maxigram/)
+# (maxigram/config/settings/base.py - 3 = maxigram/)
+ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('maxigram')
 
 # Load operating system environment variables and then prepare to use them
@@ -39,23 +40,23 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 
     # Useful template tags:
-    # 'django.contrib.humanize',
+    'django.contrib.humanize',
 
     # Admin
     'django.contrib.admin',
 ]
 THIRD_PARTY_APPS = [
-    'crispy_forms',  # Form layouts
     'allauth',  # registration
     'allauth.account',  # registration
-    'allauth.socialaccount',  # registration
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',  # registration
-    'rest_framework', #Rest framework
+    'rest_framework',  # REST framework
     'rest_framework.authtoken',
-    'taggit', #Tags for the photos
-    'taggit_serializer',
-    'rest_auth',
-    'rest_auth.registration',
+    'taggit',  # Tags for the photos
+    'taggit_serializer',  # tag serializer
+    'rest_auth',  # rest auth
+    'rest_auth.registration',  # enable registration
+    'corsheaders',  # To accept requests from React
 ]
 
 # Apps specific for this project go here.
@@ -75,6 +76,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -102,7 +104,8 @@ FIXTURE_DIRS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
+                    default='django.core.mail.backends.smtp.EmailBackend')
 
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -184,9 +187,6 @@ TEMPLATES = [
     },
 ]
 
-# See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
@@ -198,6 +198,7 @@ STATIC_URL = '/static/'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [
     str(APPS_DIR.path('static')),
+    str(ROOT_DIR.path('frontend', 'build', 'static'))
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
@@ -261,7 +262,7 @@ AUTHENTICATION_BACKENDS = [
 # Some really nice defaults
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_ADAPTER = 'maxigram.users.adapters.AccountAdapter'
@@ -270,8 +271,6 @@ SOCIALACCOUNT_ADAPTER = 'maxigram.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-#LOGIN_REDIRECT_URL = 'users:redirect'
-#LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -290,10 +289,50 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
+
 REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+CORS_ORIGIN_ALLOW_ALL = True
+
+JWT_AUTH = {
+    'JWT_VERIFY_EXPIRATION': False
+}
+
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'SCOPE': [
+            'email',
+            'public_profile',
+            'user_friends'
+        ],
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+            'picture'
+        ],
+        'AUTH_PARAMS': {
+            #'auth_type': 'reauthenticate'
+        },
+        'METHOD': 'oauth2',
+        #'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v2.4'
+    }
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'maxigram.users.serializers.SignUpSerializer'
+}
