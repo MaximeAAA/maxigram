@@ -4,11 +4,17 @@ import { Route, Switch } from "react-router-dom";
 import  "./styles.scss";
 import Footer from "components/Footer";
 import Auth from "components/Auth";
+import Navigation from "components/Navigation";
+import Feed from "components/Feed";
+import Explore from "components/Explore";
+import Search from "components/Search";
 
 const App = props => [
-  // Nav
-  props.isLoggedIn ? <PrivateRoutes key={2} /> : <PublicRoutes key={2} />,
+  // Navigation
+  props.isLoggedIn ? <Navigation key={1} /> : null,
   // Routes
+  props.isLoggedIn ? <PrivateRoutes key={2} /> : <PublicRoutes key={2} />,
+  // Footer
   <Footer key={3} />
 ];
 
@@ -18,8 +24,9 @@ App.propTypes = {
 
 const PrivateRoutes = props => (
   <Switch>
-    <Route exact path="/" render={() => "feed"}/>
-    <Route exact path="/explore" render={() => "explore"}/>
+    <Route exact path="/" component={Feed}/>
+    <Route exact path="/explore" component={Explore}/>
+    <Route exact path="/search/:searchTerm" component={Search}/>
   </Switch>
 );
 

@@ -1,9 +1,9 @@
 $tablet-width: 768px;
 $desktop-width: 875px;
-$x1-desktop-width: 1351px;
+$xl-desktop-width: 1351px;
 $phone-width: 320px;
 $iphone6-width: 375px;
-$iphone6plus-width: 450px;
+$iphone6plus-width: 550px;
 
 @mixin breakpoint($breakpoint){
     @if $breakpoint == "tablet" {
@@ -31,7 +31,7 @@ $iphone6plus-width: 450px;
             @content;
         }
     } @else if $breakpoint == "phone-tablet" {
-        @media (max-width: #{$x1-desktop-width}) {
+        @media (max-width: #{$desktop-width}) {
             @content;
         }
     }
