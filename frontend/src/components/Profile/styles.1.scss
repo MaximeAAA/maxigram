@@ -1,0 +1,123 @@
+.container {
+
+    display: flex;
+    width: 100%;
+    max-width: $max-page-width;
+    margin: 0 auto;
+    margin-top: 5%;
+    
+    .column {
+        display: flex;
+        flex-direction: column;
+        margin-left: 100px;
+        justify-content: center;
+        .avatar {
+            width: 152px;
+            height: 152px;
+            border-radius: 50%;
+            cursor: pointer;
+            @include breakpoint("tablet") {
+                width: 78px;
+                height: 78px;
+            }            
+        }
+        .user-info{
+            display: flex;
+            margin-bottom: 25px;
+            .username{
+                font-size: 25px;
+            }
+            .button{
+                margin-left: 20px;
+                border-radius: 3px;
+                background-color: white;
+                font-weight: 600;
+                font-size: $normal-font-size;
+                cursor: pointer;
+            }
+            .nav-icon {
+                margin-left: 5px;
+                cursor: pointer;
+            }
+        }
+        .user-info-count{
+            margin-bottom: 25px;
+            @include breakpoint("tablet") {
+                    display: none;
+            }
+            .count {
+                margin-right: 20px;
+                font-size: $big-font-size;
+                font-weight: 600;
+            }
+        }
+        .user-name {
+            margin-bottom: 10px;
+            .name {
+                font-weight: 600;
+
+            }
+        }
+    }
+    .underline {
+        border-top: 1px solid $light-grey;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        .tab-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 70px;
+            height: 50px;
+            margin-right: 25px;
+            cursor: pointer;
+        }
+        .tab-button:hover{
+            background-color: beige;
+        }
+    }
+
+    .file {
+        visibility: hidden;
+    }
+
+
+}
+
+.config-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .box {
+        @include boxBorder(no);
+        width: 100%;
+        max-width: 442px;
+        display: flex;
+        flex-direction: column;
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: $light-grey;
+            width: 440px;
+            height: 50px;
+            font-size: 20px;
+        }
+        .button {
+            width: 440px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .button:hover{
+            background-color: beige;
+        }
+    }
+}

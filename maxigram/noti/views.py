@@ -8,7 +8,7 @@ class Notifications(APIView):
     def get(self, request, format=None):
 
         user = request.user
-
+        
         notificatons = models.Notification.objects.filter(to=user) 
 
         serializer = serializers.NotificationSerializer(notificatons, many=True)

@@ -4,7 +4,8 @@ import Navigation from "./presenter";
 
 class Container extends Component{
     state = {
-        term: ""
+        term: "",
+        notification: false
     }
     static propTypes = {
         goToSearch: PropTypes.func.isRequired
@@ -12,9 +13,13 @@ class Container extends Component{
     render() {
         return (
             <Navigation 
+                {...this.state}
                 onSubmit={this._onSubmit} 
                 onInputChange={this._onInputChange} 
                 value={this.state.term} 
+                username={this.props.username}
+                onNotification={this._onNotification}
+                closeNotification={this._closeNotification}
             />
         );
     }
@@ -33,6 +38,27 @@ class Container extends Component{
             term: ""
         });
     }
+
+    _onNotification = () => {
+        const { notification } = this.state;
+        
+        if(notification) {
+            this.setState({
+                notification: false
+            });
+        } else {
+            this.setState({
+                notification: true
+            });
+        }
+    }
+    
+    _closeNotification = () => {
+        this.setState({
+            notification: false
+        });
+    }
+
 }
 
 export default Container;

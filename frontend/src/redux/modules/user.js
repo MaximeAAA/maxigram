@@ -1,5 +1,4 @@
 // import
-
 // actions
 
 const SAVE_TOKEN = "SAVE_TOKEN";
@@ -8,12 +7,17 @@ const SET_USER_LIST = "SET_USER_LIST";
 const FOLLOW_USER = "FOLLOW_USER";
 const UNFOLLOW_USER = "UNFOLLOW_USER";
 const SET_IMAGE_LIST = "SET_IMAGE_LIST";
+const SET_USER_PROFILE = "SET_USER_PROFILE";
+const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
 
 // action creators
-function saveToken(token){
+function saveToken(json){
+    const {token} = json;
+    const { user: { username} } = json;
     return {
         type: SAVE_TOKEN,
-        token
+        token,
+        username
     }
 }
 
@@ -51,6 +55,20 @@ function setImageList(imageList){
     }
 }
 
+function setUserProfile(user){
+    return {
+        type: SET_USER_PROFILE,
+        user
+    }
+}
+
+function setNotifications(notifications){
+    return {
+        type: SET_NOTIFICATIONS,
+        notifications
+    }
+}
+
 // API actions
 
 function facebookLogin(access_token){
@@ -67,7 +85,7 @@ function facebookLogin(access_token){
         .then(response => response.json())
         .then(json => {
             if(json.token){
-                dispatch(saveToken(json.token));
+                dispatch(saveToken(json));
             }
         })
         .catch(err => console.log(err));
@@ -89,7 +107,7 @@ function usernameLogin(username, password) {
         .then(response => response.json())
         .then(json => {
             if(json.token){
-                dispatch(saveToken(json.token));
+                dispatch(saveToken(json));
             }
         })
         .catch(err => console.log(err));
@@ -114,7 +132,7 @@ function createAccount(email, name, password, username) {
       .then(response => response.json())
       .then(json => {
         if (json.token) {
-          dispatch(saveToken(json.token));
+          dispatch(saveToken(json.token, username));
         }
       })
       .catch(err => console.log(err));
@@ -250,30 +268,145 @@ function searchImages(token, searchTerm) {
     .then(json => json); //.then(json => {return json}})
 }
 
+function userProfile(username){
+    return (dispatch, getState) => {
+        const { user: {token} } = getState();
+        fetch(`/users/${username}/`, {
+            method: "GET",
+            headers: {
+                Authorization: `JWT ${token}`
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                dispatch(logout());
+            }
+            return response.json();
+        })
+        .then(json => dispatch(setUserProfile(json)));
+    }
+}
+
+function updateUserImage(username, profile_image) {
+    return (dispatch, getState) => {
+        const { user: {token} } = getState();
+        var formData = new FormData();
+        formData.append("profile_image", profile_image);
+
+        fetch(`/users/${username}/`, {
+          method: "PUT",
+          headers: {
+            Authorization: `JWT ${token}`
+          },
+          body: formData
+        })
+        .then(response => {
+          if (response.status === 401) {
+            dispatch(logout());
+          }
+          return response.json();
+        })
+        .then(json => dispatch(setUserProfile(json)));       
+    }
+}
+
+function updateUserProfile(username, name, bio, website) {
+    return (dispatch, getState) => {
+        const { user: {token} } = getState();
+        var formData = new FormData();
+        formData.append("name", name);
+        formData.append("bio", bio);
+        formData.append("website", website);
+
+        fetch(`/users/${username}/`, {
+          method: "PUT",
+          headers: {
+            Authorization: `JWT ${token}`
+          },
+          body: formData
+        })
+        .then(response => {
+          if (response.status === 401) {
+            dispatch(logout());
+          }
+          return response.json();
+        })
+        .then(json => dispatch(setUserProfile(json)));       
+    }
+}
+
+function getNotifications() {
+  return (dispatch, getState) => {
+    const { user: { token } } = getState();
+    fetch(`/notifications/`, {
+      method: "GET",
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    })
+    .then(response => {
+        if (response.status === 401) {
+            dispatch(logout());
+        }
+        return response.json();
+    })
+    .then(json => dispatch(setNotifications(json)));
+  };
+}
+
+function changePassword(current_password, new_password){
+    return (dispatch, getState) => {
+        const { user: { token, username } } = getState();
+        fetch(`/users/${username}/password/`, {
+          method: "PUT",
+          headers: {
+            Authorization: `JWT ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              username,
+              current_password,
+              new_password
+          })
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+        })
+        .catch(err => console.log(err));
+    }
+};
+
+
 // inital state
 const initialState = {
-    isLoggedIn:localStorage.getItem("jwt") ? true : false,
-    token: localStorage.getItem("jwt")
+    isLoggedIn: localStorage.getItem("jwt") ? true : false,
+    token: localStorage.getItem("jwt"),
+    username: localStorage.getItem("username")
 };
 
 // reducer
 // actino = actionCreator의 인자값
 function reducer(state = initialState, action){
     switch (action.type) {
-        case SAVE_TOKEN:
-            return applySetToken(state, action);
-        case LOGOUT:
-            return applyLogout(state, action);
-        case SET_USER_LIST:
-            return applySetUserList(state, action);
-        case FOLLOW_USER:
-            return applyFollowUser(state, action);
-        case UNFOLLOW_USER:
-            return applyUnfollowUser(state, action);
-        case SET_IMAGE_LIST:
-            return applySetImageList(state, action);
-        default:
-            return state;
+      case SAVE_TOKEN:
+        return applySetToken(state, action);
+      case LOGOUT:
+        return applyLogout(state, action);
+      case SET_USER_LIST:
+        return applySetUserList(state, action);
+      case FOLLOW_USER:
+        return applyFollowUser(state, action);
+      case UNFOLLOW_USER:
+        return applyUnfollowUser(state, action);
+      case SET_IMAGE_LIST:
+        return applySetImageList(state, action);
+      case SET_USER_PROFILE:
+        return applySetUserProfile(state, action);
+      case SET_NOTIFICATIONS:
+        return applySetNotifications(state, action);
+      default:
+        return state;
     }
 }
 
@@ -281,16 +414,20 @@ function reducer(state = initialState, action){
 
 function applySetToken(state, action){
     const { token } = action;
+    const { username } = action;
     localStorage.setItem("jwt", token);
+    localStorage.setItem("username", username);
     return {
         ...state,
         isLoggedIn: true,
-        token
+        token,
+        username
     }
 }
 
 function applyLogout(state, action){
     localStorage.removeItem("jwt");
+    localStorage.removeItem("username");
     return {
         isLoggedIn: false
     }
@@ -339,6 +476,22 @@ function applySetImageList(state, action){
     };
 }
 
+function applySetUserProfile(state, action){
+    const { user } = action;
+    return {
+        ...state, 
+        user
+    };
+}
+
+function applySetNotifications(state, action){
+    const { notifications } = action;
+    return {
+        ...state,
+        notifications
+    };
+}
+
 // exports
 const actionCreators = {
   facebookLogin,
@@ -349,7 +502,12 @@ const actionCreators = {
   followUser,
   unfollowUser,
   getExplore,
-  searchByTerm
+  searchByTerm,
+  userProfile,
+  updateUserImage,
+  updateUserProfile,
+  getNotifications,
+  changePassword
 };
 
 export { actionCreators };

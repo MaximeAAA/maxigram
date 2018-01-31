@@ -62,7 +62,7 @@ class UserProfile(APIView):
             return None
 
     def get(self, request, username, format=None):
-
+        
         found_user = self.get_user(username)
 
         if found_user is None:
@@ -76,7 +76,7 @@ class UserProfile(APIView):
 
         user = request.user
         found_user = self.get_user(username)
-
+        
         if found_user is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

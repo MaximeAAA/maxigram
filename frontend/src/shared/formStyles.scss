@@ -6,6 +6,9 @@
     .form {
         display: flex;
         flex-direction: column;
+        .text-label{
+            font-size: 30px;
+        } 
         input[type="submit"] {
             margin-top: 10px;
         }

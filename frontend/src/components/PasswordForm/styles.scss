@@ -1,0 +1,45 @@
+.form-component {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    .form {
+        display: flex;
+        flex-direction: column;
+        .field {
+            margin-left: 30px;
+            margin-bottom: 10px;
+            .text-label{
+                display: inline-block;
+                text-align: right;
+                width: 150px;
+                font-size: 16px;
+                margin-right: 30px;
+            } 
+            input[type="submit"] {
+                margin-top: 10px;
+            }
+            .text-input {
+                border: 1px solid #efefef;
+                border-radius: 3px;
+                background-color: $bg-color;
+                margin-bottom: 5px;
+                font-size: $normal-font-size;
+                padding: 9px 0 7px 8px;
+                font-weight: 400;
+                &:focus {
+                    outline: none;
+                    border: 1px solid #b2b2b2;
+                }
+            }
+        }
+    }
+
+    .button {
+        //width: 200px;
+        @include blueButton();
+        svg {
+            margin-right: 10px;
+        }
+    }
+}
