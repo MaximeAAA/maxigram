@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
 class UsersConfig(AppConfig):
     name = 'maxigram.users'
     verbose_name = "Users"
@@ -10,6 +9,11 @@ class UsersConfig(AppConfig):
             Users system checks
             Users signal registration
         """
-        from .signals import user_signed_up
+      
+        #from .signals import user_logged_in, user_signed_up
+        import maxigram.users.signals
+
+
+        
        
       

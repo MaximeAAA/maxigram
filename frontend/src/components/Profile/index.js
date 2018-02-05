@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Container from "./container";
 import { actionCreators as userActions } from "redux/modules/user";
+import { push } from "react-router-redux";
 
 const mapStateToProps = (state, ownProps) => {
   const { user: { user, username } } = state;
@@ -21,6 +22,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         dispatch(userActions.updateUserImage(username, profile_image));
       } else if(type === "logout"){
         dispatch(userActions.logout());
+        dispatch(push("/"));
       }
     }
   }

@@ -1,12 +1,26 @@
 from allauth.account.signals import user_signed_up
+from django.contrib.auth.signals import user_logged_in
+from django.core.signals import request_started,request_finished
 from django.dispatch import receiver
 from io import BytesIO
 from urllib.request import urlopen
 from django.core.files import File
 
-@receiver(user_signed_up)
+@receiver(request_started) #fine
+def my_callback_rs(sender, **kwargs):
+    print("Request started!")
+
+@receiver(request_finished) #fine
+def my_callback_rf(sender, **kwargs):
+    print("Request finished!")
+
+@receiver(user_logged_in) #fine
+def user_logged_in(sender, user, request, **kwargs):
+    print("Logged in OK!")
+
+@receiver(user_signed_up) #fine(simple signed up)
 def user_signed_up(request, user, **kwargs):
-    print(request, user)
+    print("user_signed_up")
     if len(user.socialaccount_set.all()) > 0:
         social_account = user.socialaccount_set.all()[0]
         uid = social_account.uid

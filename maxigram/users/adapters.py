@@ -4,10 +4,13 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 
 class AccountAdapter(DefaultAccountAdapter):
+
     def is_open_for_signup(self, request):
+        print("AccountAdapter")
         return getattr(settings, 'ACCOUNT_ALLOW_REGISTRATION', True)
 
     def save_user(self, request, user, form):
+        print("AccountAdapter")
         if len(user.socialaccount_set.all()) == 0:
             name = request.data.get('name', None)
             email = request.data.get('email', None)
@@ -23,6 +26,15 @@ class AccountAdapter(DefaultAccountAdapter):
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_open_for_signup(self, request, sociallogin):
-        print("SocialAccountAdapter1")
+
+    def is_auto_signup_allowed(self, request, sociallogin):
+        print('is_auto_signup_allowed', sociallogin)
         return getattr(settings, 'ACCOUNT_ALLOW_REGISTRATION', True)
+
+    #def is_open_for_signup(self, request, sociallogin):
+    #    print('is_open_for_signup', sociallogin)
+    #    return getattr(settings, 'ACCOUNT_ALLOW_REGISTRATION', True)
+
+
+        
+

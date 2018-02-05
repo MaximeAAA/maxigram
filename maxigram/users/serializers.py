@@ -16,6 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = (
+            'pk',
             'profile_image',
             'username',
             'name',
@@ -53,7 +54,9 @@ class ListUserSerializer(serializers.ModelSerializer):
 
 
 class SignUpSerializer(RegisterSerializer):
+
     name = serializers.CharField(required=True, write_only=True)
+
     def get_cleaned_data(self):
         return {
             'name': self.validated_data.get('name', ''),

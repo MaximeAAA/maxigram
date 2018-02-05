@@ -72,6 +72,7 @@ function setNotifications(notifications){
 // API actions
 
 function facebookLogin(access_token){
+    console.log(access_token);
     return function(dispatch) {
         fetch("/users/login/facebook/", {
             method: "POST",
@@ -428,6 +429,7 @@ function applySetToken(state, action){
 function applyLogout(state, action){
     localStorage.removeItem("jwt");
     localStorage.removeItem("username");
+    window.location.reload();
     return {
         isLoggedIn: false
     }

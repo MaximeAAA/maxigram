@@ -34,14 +34,13 @@ const PrivateRoutes = props => (
     <Route exact path="/:username/" component={Profile} />
     <Route exact path="/:username/password/" component={UserInfoTab} />
     <Route exact path="/:username/profile/" component={UserInfoTab} />
-    <Redirect to="/" />
   </Switch>
 );
 
 const PublicRoutes = props => (
   <Switch>
-    <Route exact path="/" component={Auth}/>
-    <Route exact path="/forgot" render={() => "password"}/>
+    <Route exact path="/" component={Auth} />
+    <Route exact path="/forgot" render={() => "password"} />
   </Switch>
 );
 
