@@ -11,7 +11,8 @@ class Notifications(APIView):
         
         notificatons = models.Notification.objects.filter(to=user) 
 
-        serializer = serializers.NotificationSerializer(notificatons, many=True)
+        serializer = serializers.NotificationSerializer(
+            notificatons, many=True, context={'request': request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
