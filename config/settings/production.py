@@ -137,7 +137,7 @@ DATABASES = {
         'NAME': env('RDS_DB_NAME'),
         'USER': env('RDS_DB_USERNAME'),
         'PASSWORD': env('RDS_DB_PASSWORD'),
-        'HOST': env('RDS_DB_HOST'),
+        'HOST': env('RDS_DB_HOSTNAME'),
         'PORT': env('RDS_DB_PORT'),
 
     }
