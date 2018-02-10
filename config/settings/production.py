@@ -130,6 +130,17 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
 #DATABASES['default'] = env.db('DATABASE_URL')
 #DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('RDS_DB_NAME'),
+        'USER': env('RDS_DB_USERNAME'),
+        'PASSWORD': env('RDS_DB_PASSWORD'),
+        'HOST': env('RDS_DB_HOST'),
+        'PORT': env('RDS_DB_PORT'),
+
+    }
+}
 
 # CACHING
 # ------------------------------------------------------------------------------
